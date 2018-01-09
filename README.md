@@ -5,10 +5,10 @@ Regression problem
 
 input: sidewalk's feature
 
-output: people;s preference
+output: people's preference
 
 ## Potential problems:
 
 - only 1 route between 2 specific stations
 
-- no service provider in API_route table
+- no service provider in API_Transfer_route table
