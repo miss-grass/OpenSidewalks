@@ -42,31 +42,36 @@ def DistancePointLine(px, py, x1, y1, x2, y2):
 def main():
     issues = pd.read_csv('SidewalkObservations.csv', skipinitialspace=True, dtype=object)
 
-    routes = np.load('test.npy')
+    routes = np.load('edges.npy')
 
-    for i in range(0,routes.shape[0]):
+    for i in range(3,routes.shape[0]):
         result = np.zeros((len(routes[i])-1,5), dtype=object)
         for j in range (0,len(routes[i]) - 1):
-            y1 = routes[i][j][0]
-            x1 = routes[i][j][1]
-            y2 = routes[i][j+1][0]
-            x2 = routes[i][j+1][1]
+            x1 = routes[i][j][0]
+            y1 = routes[i][j][1]
+            x2 = routes[i][j+1][0]
+            y2 = routes[i][j+1][1]
             result[j][0] = str(x1) + "," + str(y1)
             result[j][1] = str(x2) + "," + str(y2)
-            result[j][3] = lineMagnitude(x1, y1, x2, y2)
+            mag = lineMagnitude(x1, y1, x2, y2)
+            result[j][3] = mag
             AC = []
-            for index, row in issues.iterrows():
-                px = float(row['Y'])
-                py = float(row['X'])
-                dist = DistancePointLine(px, py, x1, y1, x2, y2)
-                if dist <= delta:
-                    # issue is in the range
-                    AC.append(str(px) + "," + str(py))
-            result[j][4] = AC
+            if mag > 0:
+                for index, row in issues.iterrows():
+                    px = float(row['Y'])
+                    py = float(row['X'])
+                    dist = DistancePointLine(px, py, x1, y1, x2, y2)
+                    if dist <= delta:
+                        # issue is in the range
+                        AC.append(str(px) + "," + str(py))
+            result[j][2] = AC
             print('finish ', j, ' edge in ', i, ' route')
 
-        filename = "output"+str(i)+".npy"
+        filename = "issueTablesNew/output"+str(i)+".npy"
         np.save(filename, result)
+
+
+
 
 
 
