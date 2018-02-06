@@ -2,7 +2,7 @@ import numpy as np
 
 
 def main():
-    routes = np.load('coordinates.npy')
+    # routes = np.load('coordinates.npy')
     data = np.load('test.npy')
     # old = np.load('test 2.npy')
     # edges = np.load('edges.npy')
