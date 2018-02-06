@@ -5,18 +5,19 @@ from numpy import math
 
 delta = 0.000018
 
+
 # Source: https://nodedangles.wordpress.com/2010/05/16/measuring-distance-from-a-point-to-a-line-segment/
 def lineMagnitude (x1, y1, x2, y2):
-    lineMagnitude = np.math.sqrt(np.math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
-    return lineMagnitude
+    return np.math.sqrt(np.math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
+
 
 # Compute minimum distance from a point and a line segment
 def DistancePointLine(px, py, x1, y1, x2, y2):
     LineMag = lineMagnitude(x1, y1, x2, y2)
 
     if LineMag < 0.0000000001:
-        DistancePointLine = 9999
-        return DistancePointLine
+        ret = 9999
+        return ret
 
     u1 = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
     u = u1 / (LineMag * LineMag)
@@ -27,16 +28,16 @@ def DistancePointLine(px, py, x1, y1, x2, y2):
         ix = lineMagnitude(px, py, x1, y1)
         iy = lineMagnitude(px, py, x2, y2)
         if ix > iy:
-            DistancePointLine = iy
+            ret = iy
         else:
-            DistancePointLine = ix
+            ret = ix
     else:
         # Intersecting point is on the line, use the formula
         ix = x1 + u * (x2 - x1)
         iy = y1 + u * (y2 - y1)
-        DistancePointLine = lineMagnitude(px, py, ix, iy)
+        ret = lineMagnitude(px, py, ix, iy)
 
-    return DistancePointLine
+    return ret
 
 
 def main():
@@ -65,11 +66,8 @@ def main():
             result[j][4] = AC
             print('finish ', j, ' edge in ', i, ' route')
 
-        filename = "output"+str(i)+".npy"
+        filename = 'outputs/output'+str(i)+'.npy'
         np.save(filename, result)
-
-
-
 
 
 if __name__ == "__main__":
