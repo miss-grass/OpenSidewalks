@@ -22,7 +22,8 @@ def main():
 
         try:
             route = [(float(item[1]), float(item[0])) for item in data["routes"][0]["geometry"]["coordinates"]]
-        except TypeError:
+        except:
+            # if any error happens, just take the starting and end points as the only edge
             x1 = round(float(origin.split(",")[0]), 7)
             y1 = round(float(origin.split(",")[1]), 7)
             x2 = round(float(dest.split(",")[0]), 7)
