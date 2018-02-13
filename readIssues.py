@@ -44,8 +44,8 @@ def main():
 
     routes = np.load('edges.npy')
 
-    for i in range(3,routes.shape[0]):
-        result = np.zeros((len(routes[i])-1,5), dtype=object)
+    for i in range(0,routes.shape[0]):
+        result = np.zeros((len(routes[i])-1,8), dtype=object)
         for j in range (0,len(routes[i]) - 1):
             x1 = routes[i][j][0]
             y1 = routes[i][j][1]
@@ -54,7 +54,7 @@ def main():
             result[j][0] = str(x1) + "," + str(y1)
             result[j][1] = str(x2) + "," + str(y2)
             mag = lineMagnitude(x1, y1, x2, y2)
-            result[j][3] = mag
+            result[j][3] = mag * 100000
             AC = []
             if mag > 0:
                 for index, row in issues.iterrows():
@@ -63,11 +63,11 @@ def main():
                     dist = DistancePointLine(px, py, x1, y1, x2, y2)
                     if dist <= delta:
                         # issue is in the range
-                        AC.append(str(px) + "," + str(py))
+                        AC.append(row['OBJECTID'])
             result[j][2] = AC
             print('finish ', j, ' edge in ', i, ' route')
 
-        filename = "issueTablesNew/output"+str(i)+".npy"
+        filename = "issueTablesNewNew/output"+str(i)+".npy"
         np.save(filename, result)
 
 
