@@ -5,7 +5,9 @@ def main():
     # routes = np.load('coordinates.npy')
     # data = np.load('test.npy')
     # edges = np.load('edges.npy')
-    issuetable = np.load('issueTablesNewNew/output0.npy')
+    for
+    issuetable = np.load('issueTablesComplete/output3.npy')
+
     print(issuetable)
     """for i in range(0, data.shape[0]):
         print(len(data[i]))
