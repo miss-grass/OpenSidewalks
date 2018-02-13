@@ -9,8 +9,7 @@ def main():
     for i in range(0, 21):
         x = np.load('issueTablesNewNew/output' + str(i) + '.npy')
         for j in range(0,x.shape[0]):
-            if (len(x[j][2]) > 0):
-
+            if len(x[j][2]) > 0:
                 for k in range(0, len(x[j][2])):
                     issue = issues.iloc[[x[j][2][k]]]
                     if issue.OBSERV_TYPE.item() == 'SURFCOND':
@@ -53,16 +52,6 @@ def main():
 
         filename = "issueTablesComplete/output" + str(i) + ".npy"
         np.save(filename, x)
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
