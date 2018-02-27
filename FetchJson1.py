@@ -23,7 +23,7 @@ def main():
     grades = np.empty((coords.shape[0], 0)).tolist()
     dists = np.zeros(coords.shape[0])
     print(coords.shape[0])
-    for i in range(0, 1200):
+    for i in range(1200, 2400):
         origin = coords[i][0]
         dest = coords[i][1]
         route = []
