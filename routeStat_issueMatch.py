@@ -91,7 +91,10 @@ def severity(AC):
 
 def main():
     issues = pd.read_csv('SidewalkObservations.csv', skipinitialspace=True, dtype=object)
-    issues["ROUTE"] = np.NaN
+
+    routelist = np.zeros((issues.shape[0],1), dtype=object)
+    for t in range(0, routelist.shape[0]):
+        routelist[t] = []
 
     routes = np.load('OpenSidewalks/new_edges_data/edges_new.npy')
     grades = np.load('OpenSidewalks/new_edges_data/grades.npy')
@@ -127,12 +130,11 @@ def main():
                     px = float(row['Y'])
                     py = float(row['X'])
                     dist = DistancePointLine(px, py, x1, y1, x2, y2)
+
                     if dist <= delta:
                         # issue is in the range
                         AC.append(row['OBJECTID'])
-                        if row['ROUTE'] == np.NaN:
-                            row['ROUTE'] = []
-                        row['ROUTE'].append(i)
+                        routelist[index].append(i)
 
             print('finish ', j, ' edge in ', i, ' route')
 
@@ -159,6 +161,8 @@ def main():
 
         print(result[i])
 
+    issues["ROUTE"] = routelist
+    
     filename = "bigTable/output-" + str(start_num) + "-" + str(end_num) + ".npy"
     np.save(filename, result)
     issueFile = "newIssues.csv"
