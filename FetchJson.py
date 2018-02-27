@@ -22,8 +22,7 @@ def main():
     # the data of grades of each edge
     grades = np.empty((coords.shape[0], 0)).tolist()
     dists = np.zeros(coords.shape[0])
-    print(coords.shape[0])
-    for i in range(0, 1200):
+    for i in range(0, coords.shape[0]):
         origin = coords[i][0]
         dest = coords[i][1]
         route = []
@@ -63,9 +62,9 @@ def main():
         if i % 10 == 0 and i != 0:
             print(str(i) + " steps finished!")
 
-    #np.save("accmap_data_data/edges", edges)
-    #np.save("accmap_data_data/grades", grades)
-    #np.save("accmap_data_data/distances", dists)
+    np.save("accmap_data_data/edges", edges)
+    np.save("accmap_data_data/grades", grades)
+    np.save("accmap_data_data/distances", dists)
     print("finished! The edges of routes are stored in the edges.npy now!")
 
 
