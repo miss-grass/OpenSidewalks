@@ -3,10 +3,9 @@ import pandas as pd
 from numpy import math
 
 delta = 0.000018
-issues = pd.read_csv('SidewalkObservations.csv', skipinitialspace=True, dtype=object)
+issues = pd.read_csv('test.csv', skipinitialspace=True, dtype=object)
 start_num = 0
-end_num = 1000
-
+end_num = 800
 
 # Source: https://nodedangles.wordpress.com/2010/05/16/measuring-distance-from-a-point-to-a-line-segment/
 def lineMagnitude(x1, y1, x2, y2):
@@ -46,8 +45,11 @@ def DistancePointLine(px, py, x1, y1, x2, y2):
 def severity(AC):
     severe = 0
     minor = 0
-    for k in range(0, len(AC)):
-        issue = issues.iloc[[AC[k]]]
+    for iss in AC:
+        # print(iss)
+        # print(issues.iloc[[iss-1]])
+        issue = issues.iloc[[iss-1]]
+
         if issue.OBSERV_TYPE.item() == 'SURFCOND':
             if issue.SURFACE_CONDITION.item() == 'CRACK>72' \
                     or issue.SURFACE_CONDITION.item() == 'CRACK<72' \
@@ -90,15 +92,11 @@ def severity(AC):
 
 
 def main():
-    issues = pd.read_csv('SidewalkObservations.csv', skipinitialspace=True, dtype=object)
+    routelist = np.empty((issues.shape[0],0)).tolist()
 
-    routelist = np.zeros((issues.shape[0],1), dtype=object)
-    for t in range(0, routelist.shape[0]):
-        routelist[t] = []
-
-    routes = np.load('OpenSidewalks/new_edges_data/edges_new.npy')
-    grades = np.load('OpenSidewalks/new_edges_data/grades.npy')
-    distances = np.load('OpenSidewalks/new_edges_data/distances.npy')
+    routes = np.load('data/edges.npy')
+    grades = np.load('data/grades.npy')
+    distances = np.load('data/distances.npy')
 
     result = np.zeros(((end_num - start_num), 10), dtype=object)
 
@@ -132,9 +130,10 @@ def main():
                     dist = DistancePointLine(px, py, x1, y1, x2, y2)
 
                     if dist <= delta:
-                        # issue is in the range
-                        AC.append(row['OBJECTID'])
-                        routelist[index].append(i)
+                        # issue is in the range, and it's not appealed before
+                        if int(row['OBJECTID']) not in AC:
+                            AC.append(int(row['OBJECTID']))
+                            routelist[int(row['OBJECTID'])-1].append(i)
 
             print('finish ', j, ' edge in ', i, ' route')
 
@@ -159,14 +158,15 @@ def main():
         if minor > 0:
             result[i - start_num][8] = float(minor) / float(dist)
 
-        print(result[i])
+        print(result[i - start_num])
 
     issues["ROUTE"] = routelist
     
-    filename = "bigTable/output-" + str(start_num) + "-" + str(end_num) + ".npy"
+    filename = "output/output_" + str(start_num) + "-" + str(end_num) + ".npy"
     np.save(filename, result)
-    issueFile = "newIssues.csv"
-    issues.to_csv(issueFile, sep=',', encoding='utf-8')
+    issueFile = "output/newIssues_" + str(start_num) + "-" + str(end_num)+ ".npy"
+    np.save(issueFile, routelist)
+    print("files saved correctly!")
 
 
 if __name__ == "__main__":
