@@ -4,8 +4,8 @@ from numpy import math
 
 delta = 0.000018
 issues = pd.read_csv('test.csv', skipinitialspace=True, dtype=object)
-start_num = 0
-end_num = 800
+start_num = 1600
+end_num = 2400
 
 # Source: https://nodedangles.wordpress.com/2010/05/16/measuring-distance-from-a-point-to-a-line-segment/
 def lineMagnitude(x1, y1, x2, y2):
@@ -101,6 +101,7 @@ def main():
     result = np.zeros(((end_num - start_num), 10), dtype=object)
 
     for i in range(start_num, end_num):
+        
         xs = routes[i][0][0]
         ys = routes[i][0][1]
         xe = routes[i][len(routes[i]) - 1][0]
@@ -109,6 +110,14 @@ def main():
         result[i - start_num][0] = str(xs) + "," + str(ys)
         # end point
         result[i - start_num][1] = str(xe) + "," + str(ye)
+
+        if distance[i] == 0:
+            result[i - start_num][6] = 0
+            continue
+        if  distance[i] > 2000:
+            result[i - start_num][6] = distance[i]
+            continue
+            
         # set of points on the route
         result[i - start_num][2] = routes[i]
         # set of slope for each edge
