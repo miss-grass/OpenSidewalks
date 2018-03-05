@@ -3,7 +3,7 @@ import pandas as pd
 from numpy import math
 
 
-delta = 0.000018
+delta = 0.000024
 issues = pd.read_csv('SidewalkObservations.csv', skipinitialspace=True, dtype=object)
 start_num = 0
 end_num = 1000
