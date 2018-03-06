@@ -111,11 +111,11 @@ def main():
         # end point
         result[i - start_num][1] = str(xe) + "," + str(ye)
 
-        if distance[i] == 0:
+        if distances[i] == 0:
             result[i - start_num][6] = 0
             continue
-        if  distance[i] > 2000:
-            result[i - start_num][6] = distance[i]
+        if  distances[i] > 2000:
+            result[i - start_num][6] = distances[i]
             continue
             
         # set of points on the route
