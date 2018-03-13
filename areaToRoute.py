@@ -1,74 +1,68 @@
 import numpy as np
-import pandas as pd
 from numpy import math
 
-
+final_lat = 47.6498128
+final_long = -122.3037817
 delta = 500
 
-def mToLat(m):
+
+def m_to_lat(m):
     return 1.0 / 110540 * m
 
 
-def mToLong(m, lat):
+def m_to_long(m, lat):
     return -1.0 / (111320 * math.cos(lat)) * m
 
 
-def colorIndex(s, m):
-    n = s * 1000 + m * 100
+def color_index(s, n):
     # exist severe --> 4
     if s > 0:
         return 4
     # 0 --> 0
-    if (n == 0):
+    if n == 0:
         return 0
-    # 0-1 --> 1
-    elif (n <= 1):
+    # 0-3 --> 1
+    elif n <= 3:
         return 1
-    # 1-5 --> 2
-    elif (n <= 5):
+    # 3-5 --> 2
+    elif n <= 5:
         return 2
-    # 5-10 --> 3
-    elif (n <= 10):
+    # 5-8 --> 3
+    elif n <= 8:
         return 3
-    # >10 --> 4
+    # >8 --> 4
     else:
         return 4
 
 
 def main():
-    df = pd.read_csv('acc_final_output/output_0-4800.csv', skipinitialspace=True, dtype=object)
-    lat = 47.64981280000001
-    long = -122.3037817
-    bfX = mToLat(delta)
-    bfY = mToLong(delta, lat)
-    x1 = lat - bfX
-    x2 = lat + bfX
-    y1 = long - bfY
-    y2 = long + bfY
+    data = np.load('acc_final_output/output_0-4800.npy')
+    bfX = m_to_lat(delta)
+    bfY = m_to_long(delta, final_lat)
+    x1 = final_lat - bfX
+    x2 = final_lat + bfX
+    y1 = final_long - bfY
+    y2 = final_long + bfY
 
-    result = np.zeros((47, 4), dtype=object)
-
-    cnt = 0
-    for index, row in df.iterrows():
-        coord = row['starting coordinate'].split(',')
-        x = float(coord[0])
-        y = float(coord[1])
-        coordE = row['ending coordinate'].split(',')
-        xE = float(coordE[0])
-        yE = float(coordE[1])
-        if x >= x1 and x <= x2 and y >= y1 and y <= y2 and \
-                        xE >= x1 and xE <= x2 and yE >= y1 and yE <= y2:
-
-            result[cnt][0] = row['starting coordinate']
-            result[cnt][1] = row['ending coordinate']
-            result[cnt][2] = row['vertices']
-            result[cnt][3] = colorIndex(float(row['ave_severe_issue/meter']), float(row['ave_minor_issue/meter']))
-            #print(cnt, ':', x, print(row)
-            cnt += 1
-
-    print(result)
+    routes = []
+    inds = []
+    for route in data:
+        x = float(route[0].split(',')[0])
+        y = float(route[0].split(',')[1])
+        xE = float(route[1].split(',')[0])
+        yE = float(route[1].split(',')[1])
+        # we want this route
+        if x1 <= x <= x2 and y1 <= y <= y2 and x1 <= xE <= x2 and y1 <= yE <= y2:
+            ind = color_index(route[4], route[5])
+            routes.append(route[2])
+            inds.append(ind)
+            print(route[2])
+            print(ind)
+            print()
+    """
     filename = "acc_final_output/visualize.npy"
     np.save(filename, result)
+    """
 
 if __name__ == "__main__":
     main()
